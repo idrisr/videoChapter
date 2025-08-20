@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
@@ -25,6 +24,11 @@ data Text_ = Text_ deriving (Show)
 data Chapter = Chapter Text (Maybe NominalDiffTime)
     deriving (Show, Eq)
 
+newtype Menu = Menu {chapters :: [Chapter]} deriving (Show)
+
+data Track = GeneralTr General | MenuTr Menu | VideoTr Video | AudioTr Audio | TextTr Text_
+    deriving (Show)
+
 instance Buildable Media where
     build (Media tracks) =
         formatTime (fromMaybe 0 parseDuration) +| ("\n\n" :: Text) |+ blockListF menu +| ""
@@ -48,11 +52,6 @@ formatTime :: NominalDiffTime -> Builder
 formatTime s | s < 3600 = timeF "%02M:%02S" s
 formatTime s = timeF "%02H:%02M:%02S" s
 
-newtype Menu = Menu {chapters :: [Chapter]} deriving (Show)
-
-data Track = GeneralT General | MenuT Menu | VideoT Video | AudioT Audio | TextT Text_
-    deriving (Show)
-
 instance FromJSON Media where
     parseJSON = withObject "root" $ \v -> do
         mediaObj <- v .: "media"
@@ -63,15 +62,15 @@ instance FromJSON Track where
     parseJSON = withObject "track" $ \v -> do
         t <- v .: "@type"
         case t of
-            "General" -> pure $ GeneralT General
+            "General" -> pure $ GeneralTr General
             "Video" -> do
                 e <- v .: "Duration"
-                pure $ VideoT $ Video e
-            "Audio" -> pure $ AudioT Audio
-            "Text" -> pure $ TextT Text_
+                pure $ VideoTr $ Video e
+            "Audio" -> pure $ AudioTr Audio
+            "Text" -> pure $ TextTr Text_
             "Menu" -> do
                 e <- v .: "extra"
-                pure . MenuT . Menu $ uncurry toChapter <$> toList e
+                pure . MenuTr . Menu $ uncurry toChapter <$> toList e
             _ -> fail $ "no good" <> t
 
 readTimeStamp :: Text -> Maybe NominalDiffTime
@@ -93,11 +92,11 @@ toChapter :: Text -> Text -> Chapter
 toChapter k v = Chapter v (readTimeStamp k)
 
 toMenu :: Track -> Maybe Menu
-toMenu (MenuT m) = Just m
+toMenu (MenuTr m) = Just m
 toMenu _ = Nothing
 
 toVideo :: Track -> Maybe Video
-toVideo (VideoT v) = Just v
+toVideo (VideoTr v) = Just v
 toVideo _ = Nothing
 
 main :: IO ()
@@ -105,5 +104,4 @@ main = do
     input <- BL.hGetContents stdin
     case eitherDecode input of
         Left err -> putStrLn $ "Error parsing JSON: " <> err
-        Right media -> do
-            fmt . prettyLn $ (media :: Media)
+        Right media -> fmt . prettyLn $ (media :: Media)

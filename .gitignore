@@ -30,3 +30,6 @@ devenv.local.nix
 
 # pre-commit
 .pre-commit-config.yaml
+session.yaml
+haskell-tutorial.mp4
+.envrc
