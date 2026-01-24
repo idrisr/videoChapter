@@ -22,6 +22,9 @@
               postBuild = ''
                 wrapProgram "$out/bin/videoChapter" \
                   --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.mediainfo ]}
+                mkdir -p "$out/share/zsh/site-functions"
+                cp ${./videoChapter/completions/_videoChapter} \
+                  "$out/share/zsh/site-functions/_videoChapter"
               '';
             };
         in
@@ -54,6 +57,9 @@
             postBuild = ''
               wrapProgram "$out/bin/videoChapter" \
                 --prefix PATH : ${final.lib.makeBinPath [ final.mediainfo ]}
+              mkdir -p "$out/share/zsh/site-functions"
+              cp ${./videoChapter/completions/_videoChapter} \
+                "$out/share/zsh/site-functions/_videoChapter"
             '';
           };
       };

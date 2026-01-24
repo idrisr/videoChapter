@@ -1,0 +1,29 @@
+#compdef videoChapter
+
+# Simple completion for media files by extension.
+_videoChapter() {
+  local -a video_exts
+  video_exts=(
+    avi
+    avif
+    flv
+    m2ts
+    m4v
+    mkv
+    mov
+    mp4
+    mpg
+    mpeg
+    mts
+    ogv
+    ts
+    webm
+    wmv
+  )
+
+  _arguments \
+    '1:media file:_files -g "*.(#i)(${(j:|:)video_exts})"' \
+    '*: :_files'
+}
+
+_videoChapter "$@"
