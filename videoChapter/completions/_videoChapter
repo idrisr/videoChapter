@@ -22,8 +22,7 @@ _videoChapter() {
   )
 
   _arguments \
-    '1:media file:_files -g "*.(#i)(${(j:|:)video_exts})"' \
-    '*: :_files'
+    '1:media file:_files -f -g "*.(#i)(${(j:|:)video_exts})"'
 }
 
 _videoChapter "$@"
