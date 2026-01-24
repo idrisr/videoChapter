@@ -2,9 +2,9 @@
 
 # Simple completion for media files by extension.
 _videoChapter() {
-  setopt local_options extendedglob glob
+  setopt local_options extendedglob
 
-  local -a video_exts matches
+  local -a video_exts
   video_exts=(
     avi
     avif
@@ -23,11 +23,7 @@ _videoChapter() {
     wmv
   )
 
-  matches=( *.(#i)(${(j:|:)video_exts})(.) )
-  if (( ${#matches} )); then
-    compadd -Q -a matches
-  fi
-  return 0
+  _files -g "*.(#i)(${(j:|:)video_exts})(.)"
 }
 
 _videoChapter "$@"
