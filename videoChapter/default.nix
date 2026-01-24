@@ -1,5 +1,14 @@
-{ mkDerivation, aeson, base, bytestring, containers, fmt, lib
-, optparse-applicative, text, time
+{ mkDerivation
+, aeson
+, base
+, bytestring
+, containers
+, fmt
+, lib
+, optparse-applicative
+, process
+, text
+, time
 }:
 mkDerivation {
   pname = "videoChapter";
@@ -8,7 +17,15 @@ mkDerivation {
   isLibrary = false;
   isExecutable = true;
   executableHaskellDepends = [
-    aeson base bytestring containers fmt optparse-applicative text time
+    aeson
+    base
+    bytestring
+    containers
+    fmt
+    optparse-applicative
+    process
+    text
+    time
   ];
   description = "Extract and display video chapter information";
   license = lib.licenses.mit;

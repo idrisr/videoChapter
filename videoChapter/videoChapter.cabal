@@ -15,6 +15,9 @@ common warnings
 executable videoChapter
   import:        warnings
   main-is:       Main.hs
+  other-modules:
+    VideoChapter.Mediainfo
+    VideoChapter.Model
   build-depends:
     , aeson
     , base                  ^>=4.19.2.0
@@ -22,6 +25,7 @@ executable videoChapter
     , containers
     , fmt
     , optparse-applicative
+    , process
     , text
     , time
 
