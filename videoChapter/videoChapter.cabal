@@ -18,12 +18,20 @@ executable videoChapter
   other-modules:
     VideoChapter.Mediainfo
     VideoChapter.Model
+    VideoChapter.OpenAI
+    VideoChapter.Srt
+
   build-depends:
     , aeson
-    , base                  ^>=4.19.2.0
+    , base
     , bytestring
     , containers
+    , directory
+    , filepath
     , fmt
+    , http-client
+    , http-client-tls
+    , http-types
     , optparse-applicative
     , process
     , text

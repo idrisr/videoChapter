@@ -1,19 +1,17 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { nixpkgs, flake-utils, ... }:
-    let
-      compiler = "ghc984";
-    in
-    flake-utils.lib.eachDefaultSystem
+    flake-utils.lib.eachSystem
+      [ "x86_64-linux" "aarch64-darwin" ]
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           videoChapterRaw =
-            pkgs.haskell.packages.${compiler}.callPackage ./videoChapter { };
+            pkgs.haskellPackages.callPackage ./videoChapter { };
           videoChapter =
             pkgs.symlinkJoin {
               name = "videoChapter";
@@ -32,7 +30,7 @@
           packages.default = videoChapter;
           devShells.default = pkgs.mkShell {
             buildInputs =
-              with pkgs.haskell.packages."${compiler}"; [
+              with pkgs.haskellPackages; [
                 fourmolu
                 cabal-fmt
                 implicit-hie
@@ -42,13 +40,15 @@
                 pkgs.ghciwatch
                 cabal-install
                 pkgs.haskell-language-server
+                pkgs.mediainfo
+                pkgs.zlib
               ];
           };
         }) //
     {
       overlays.default = final: prev: {
         videoChapterRaw =
-          final.haskell.packages.${compiler}.callPackage ./videoChapter { };
+          final.haskellPackages.callPackage ./videoChapter { };
         videoChapter =
           final.symlinkJoin {
             name = "videoChapter";
