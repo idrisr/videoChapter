@@ -1,9 +1,6 @@
 { mkDerivation
 , aeson
 , base
-, http-client
-, http-client-tls
-, http-types
 , bytestring
 , containers
 , fmt
@@ -25,9 +22,6 @@ mkDerivation {
     bytestring
     containers
     fmt
-    http-client
-    http-client-tls
-    http-types
     optparse-applicative
     process
     text
